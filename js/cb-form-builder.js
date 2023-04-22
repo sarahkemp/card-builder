@@ -114,18 +114,27 @@ class CBFormBuilder {
             }
         }
 
-        if(this._data[type] === undefined){
-            this._data[type] = [];
-        }
         this._data[type].push(initial);
+        let $optgroup = this._$selector.find('optgroup[label="'+type+'"]');
+        let idx = this._data[type].length - 1;
+        let name = this._getCardName(type, idx);
+        let $op = $('<option value="'+name+'">New</option>');
+
+        $optgroup.append($op);
+
+        this._$selector.val(name);
+
+        return idx;
+    }
+
+    _addType(type){
+        this._data[type] = [];
+
         let $optgroup = this._$selector.find('optgroup[label="'+type+'"]');
         if(!$optgroup.length){
             $optgroup = $('<optgroup label="'+type+'"/>');
             this._$selector.append($optgroup);
         }
-        let $op = $('<option value="'+(this._data[type].length - 1)+'">New '+type+' '+
-            this._data[type].length+'</option>');
-        $optgroup.append($op);
     }
 
     _bindEvents(){
@@ -133,10 +142,6 @@ class CBFormBuilder {
 
         this._$container.on('focus', '.img-selector', function(){
             that._initImageSelector($(this));
-        });
-
-        this._$container.on('focus', '#card-selector', function(e){
-            that._initCardSelector($(e.target));
         });
 
         this._$container.on('change', '.fields input, .fields select, .fields textarea', function(){
@@ -282,16 +287,27 @@ class CBFormBuilder {
                 types[i]+' Card</option>'));
         }
 
+        this._$selector.on('focus', function(){
+            if($(that).data('select2')){
+                that._$selector.select2('open');
+            }else{
+                that._initCardSelector(that._$selector);
+            }
+        });
+
         document.addEventListener('keydown', function(e){
             let active = document.activeElement;
             if(e.key === 'Escape'){
                 (active || that._$selector).blur();
                 return true;
             }
-            if(active && (active.tagName === 'INPUT' || active.tagName === 'SELECT' || active.tagName === 'TEXTAREA')){
+            if(active && (active.tagName === 'INPUT' || active.tagName === 'SELECT')){
                 if(e.key === 'Enter'){
-                    that._$selector.focus().select2('open');
+                    that._$selector.focus();
                 }
+                return true;
+            }
+            if(active && active.tagName === 'TEXTAREA'){
                 return true;
             }
             if(e.which >= 48 && +e.which <=90){
@@ -359,10 +375,6 @@ class CBFormBuilder {
         return '<img src="' + img + '" alt="' + state.text + '"/>' + state.text;
     }
 
-    _getActiveCard(){
-        return this._$selector.val();
-    }
-
     _getActiveCardIndex(){
         let type = this._getActiveCardType();
         let value = this._$selector.val();
@@ -384,6 +396,10 @@ class CBFormBuilder {
         }
         // new cards have no optgoup parent label, and their type is their value
         return parent.attr('label') || this._$selector.val();
+    }
+
+    _getCardName(type, idx){
+        return type+'|'+idx;
     }
 
     _getImageUrlFromImgSelect(el){
@@ -449,7 +465,7 @@ class CBFormBuilder {
                 let $group = $('<optgroup label="'+type+'"/>');
                 for(let i = 0; i < rows.length; i++){
                     if(rows[i]){
-                        $group.append($('<option value="'+type+'|'+i+'">'+rows[i].NAME+'</option>'));
+                        $group.append($('<option value="'+that._getCardName(type,i)+'">'+rows[i].NAME+'</option>'));
                     }
                 }
                 $input.append($group);
@@ -572,35 +588,48 @@ class CBFormBuilder {
             return;
         }
 
-        let rebuild = false;
         let key = $field.attr('name').toUpperCase();
-        let value = $field.val().trim();
+        let value = $field.val();
 
         // if this is a new card, make a new card
         if(active === type){
-            this._addCard(type, {key: value});
-            active = this._data[type].length - 1;
-            rebuild = true;
+            active = null;
         }
 
         // save the new information
-        this._data[type][active][key] = value;
+        this._setDataValue(type, active, key, value, $field.data('preview') === 1);
 
-        if(rebuild || key === 'NAME'){
-            this._rebuildSelector(active);
+    }
+
+    _setDataValue(type, idx, key, value, updatePreview = false){
+        // ensure the type exists in the data & selector
+        if(this._data[type] === undefined){
+            this._addType(type);
+        }
+        // ensure the card exists in the data & selector
+        if(idx === null || !this._data[type][idx]){
+            idx = this._addCard(type);
+        }
+
+        // set the data
+        this._data[type][idx][key] = value;
+
+        // make sure name is always set
+        if(key !== 'NAME' && !this._data[type][idx]['NAME']){
+            this._setDataValue(type, idx, 'NAME','New '+type+' '+this._data[type].length);
         }
 
         // if there is a name change, update the selector
         if(key === 'NAME'){
             this._$selector.find('option:selected').text(value);
+            this._rebuildSelector(this._getCardName(type,idx));
         }
 
         // if this is a preview field, update the preview
-        if($field.data('preview') === 1){
+        if(updatePreview){
             let $p = this._$preview.find('.field-preview[data-name="'+key+'"]');
             $p.html(this._markdownToHtml(value));
         }
-
     }
 
     /**
