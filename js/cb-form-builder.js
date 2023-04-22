@@ -360,7 +360,11 @@ class CBFormBuilder {
 
     _getActiveCardIndex(){
         let type = this._getActiveCardType();
-        return this._$selector.val().replace(type+'|', '');
+        let value = this._$selector.val();
+        if(!value){
+            return value;
+        }
+        return value.replace(type+'|', '');
     }
 
     _getActiveCardName(){
