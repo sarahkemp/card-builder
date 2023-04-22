@@ -36,10 +36,19 @@
   border:1px solid var(--color-canvas-inset);
   border-radius: 8px;
   background-color: var(--color-canvas-inset);
+  position: relative;
 }
 #card-preview img{
   width:100%;
   height:100%;
+}
+#card-preview .field-preview{
+  border: 1px dotted var(--color-border-muted);
+  background-color: rgba(255,255,255,0.5);
+  color: var(--color-scale-black);
+  border-radius: 8px;
+  padding: 0.5em;
+  position: absolute;
 }
 #loading-overlay{
   display: none;
@@ -119,7 +128,6 @@
   margin: 0.5em 0;
 }
 textarea,select,input{
-  font-family:"Dumbledor 1",sans-serif;
   background-color:var(--color-canvas-subtle);
   border-width: 1px;
   border-style: solid;

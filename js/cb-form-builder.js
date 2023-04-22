@@ -1,11 +1,14 @@
 /**
  * Expects json from fields.json with definitions of each card type and
  * its fields
+ * todo allow and use font upload
+ * todo preview markdown if configured
  * @param fields
  */
 class CBFormBuilder {
 
     _$container;
+    _$preview;
     _$selector;
     _original = {};
     _data = {};
@@ -192,7 +195,8 @@ class CBFormBuilder {
 
     _buildCardPreview(){
         let $wrapper = $('<div id="preview-wrapper"/>');
-        $wrapper.append($('<div id="card-preview"/>'));
+        this._$preview = $('<div id="card-preview"/>');
+        $wrapper.append(this._$preview);
         this._$container.append($wrapper);
     }
 
@@ -256,6 +260,9 @@ class CBFormBuilder {
             $.each(defs.attr, function(key, val){
                 $tag.attr(key, val);
             });
+        }
+        if(defs.preview){
+            $tag.data('preview', 1);
         }
         $tag.attr('name', defs.name.toUpperCase().replace(' ', '_'));
         return $tag;
@@ -576,6 +583,12 @@ class CBFormBuilder {
             this._$selector.find('option:selected').text(value);
         }
 
+        // if this is a preview field, update the preview
+        if($field.data('preview') === 1){
+            let $p = this._$preview.find('.field-preview[data-name="'+key+'"]');
+            $p.text(value);
+        }
+
     }
 
     /**
@@ -669,18 +682,40 @@ class CBFormBuilder {
      * @param type
      */
     _updateCardPreview(type){
-        let $preview = this._$container.find('#card-preview');
-        $preview.empty();
+        this._$preview.empty();
 
         if(!type){
             return false;
         }
 
+        // show the card front template if found
         let imagePath = type.toLowerCase().replace(' ', '_')+'.png';
         if(this._images['fronts']){
             let imageData = this._images['fronts'][imagePath];
             if(imageData){
-                $preview.append($('<img src="'+imageData.dataURL+'" alt="'+type+'" />'));
+                this._$preview.append($('<img src="'+imageData.dataURL+'" alt="'+type+'" />'));
+            }
+        }
+
+        // see if any of the fields for this card type have preview info configured
+        let fields = this._fields[type];
+        let data = this._data[type] ? this._data[type][this._getActiveCardIndex()] : [];
+
+        if(fields){
+            for(let i = 0; i < fields.length; i++){
+                if(fields[i].preview){
+                    let name = fields[i].name.toUpperCase();
+                    let $p = $('<div class="field-preview" data-name="'+name+'" />');
+                    $.each(fields[i].preview, function(k, v){
+                        $p.css(k, v);
+                    });
+                    if(data && data[name]){
+                        $p.text(data[name]);
+                    }else{
+                        $p.html('&nbsp;');
+                    }
+                    this._$preview.append($p);
+                }
             }
         }
     }
