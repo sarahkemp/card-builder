@@ -138,7 +138,7 @@ class CBFormBuilder {
             that._initCardSelector($(e.target));
         });
 
-        this._$container.on('change', '.fields input, .fields select, .fields textarea', function(e){
+        this._$container.on('change', '.fields input, .fields select, .fields textarea', function(){
             that._saveFieldValue($(this));
         });
 
@@ -230,7 +230,7 @@ class CBFormBuilder {
         }
     }
 
-    _buildSelect(defs, $label){
+    _buildSelect(defs){
         let $select = $('<select/>');
         $.each(defs.options, function(key, val){
             let $op = $('<option value="'+key+'">'+val+'</option>');
@@ -502,7 +502,6 @@ class CBFormBuilder {
 
     /**
      * given a unique card name, either load its data from memory or customize it based on the new card type they chose
-     * @param name
      */
     _loadCard(){
         let type = this._getActiveCardType();
@@ -512,7 +511,6 @@ class CBFormBuilder {
     }
 
     _rebuildSelector(select, focus = false){
-        let selected = this._$selector.val();
         if(this._$selector.data('select2')){
             this._$selector.select2('destroy');
         }
@@ -526,8 +524,6 @@ class CBFormBuilder {
 
     /**
      * Reset a card to its initial state
-     * @param type
-     * @param idx
      * @private
      */
     _resetActiveCard(){
@@ -596,7 +592,7 @@ class CBFormBuilder {
                     $list.append($('<li class="deleted color-fg-closed">Deleted '+type+' '+rows[j].NAME+'</li>'));
                     continue;
                 }
-                $.each(that._original[type][j], function(key, value){
+                $.each(that._original[type][j], function(key){
                     if(that._data[type][j][key] !== that._original[type][j][key]){
                         $list.append($('<li class="changed">'+type+' '+rows[j].NAME+' '+key+': "'+that._original[type][j][key]+'" changed to "'+
                             that._data[type][j][key]+'"</li>'));
@@ -609,8 +605,8 @@ class CBFormBuilder {
                 }
             }
         });
-        $.each(that._data, function(type, rows){
-            if(that._original[type] == undefined){
+        $.each(that._data, function(type){
+            if(that._original[type] === undefined){
                 for(let j = 0; j < that._data[type].length; j++){
                     if(that._data[type][j]){
                         $list.append($('<li class="diff-added color-fg-open">Added '+type+' '+that._data[type][j].NAME+'</li>'));
@@ -692,6 +688,7 @@ class CBFormBuilder {
     /**
      * Given a card type, determine what fields should be showing and hiding
      * @param type
+     * @param rowIndex
      */
     _updateFieldsForCardType(type, rowIndex){
         let $wrapper = this._$container.find('.fields');
