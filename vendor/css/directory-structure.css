@@ -1,12 +1,12 @@
 .directory-list ul {
     margin-left: 10px;
     padding-left: 20px;
-    border-left: 1px dashed #ddd;
+    border-left: 1px dashed var(--color-fg-subtle);
 }
 
 .directory-list li {
     list-style: none;
-    color: #888;
+    color: var(--color-fg-muted);
     font-size: 17px;
     font-style: italic;
     font-weight: normal;
@@ -14,19 +14,19 @@
 
 .directory-list a {
     border-bottom: 1px solid transparent;
-    color: #888;
+    color: var(--color-fg-muted);
     text-decoration: none;
     transition: all 0.2s ease;
 }
 
 .directory-list a:hover {
-    border-color: #eee;
-    color: #000;
+    border-color: var(--color-fg-default);
+    color: var(--color-canvas-inset);
 }
 
 .directory-list .folder,
 .directory-list .folder > a {
-    color: #777;
+    color: var(--color-fg-subtle);
     font-weight: bold;
 }
 

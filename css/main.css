@@ -1,7 +1,7 @@
 #upload, #download{
-  border:3px dashed #999;
+  border:3px dashed var(--color-fg-subtle);
   padding:1em;
-  background-color: #3b3b3b;
+  background-color: var(--color-canvas-subtle);
   position: fixed;
   top:0;
   bottom:0;
@@ -13,7 +13,7 @@
   text-align: center;
 }
 #upload h1{
-  border-bottom:1px solid #999;
+  border-bottom:1px solid var(--color-fg-subtle);
   margin-left:5%;
   margin-right:5%;
 }
@@ -21,7 +21,7 @@
   max-width:300px;
   margin-left: auto;
   margin-right: auto;
-  background-color: #242424;
+  background-color: var(--color-canvas-inset);
   border-radius: 1em;
   padding:1em;
 }
@@ -33,9 +33,9 @@
   max-width: 5in;
   margin:0 auto;
   height:7in;
-  border:1px solid black;
+  border:1px solid var(--color-canvas-inset);
   border-radius: 8px;
-  background-color: black;
+  background-color: var(--color-canvas-inset);
 }
 #card-preview img{
   width:100%;
@@ -48,7 +48,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0,0,0,0.6);
+  background-color: var(--color-neutral-subtle);
   text-align: center;
   padding-top: 20%;
 }
@@ -75,8 +75,8 @@
 #download .closer{
   border-radius: 0.5em;
   position: fixed;
-  border: 2px solid gray;
-  background-color: black;
+  border: 2px solid var(--color-canvas-overlay);
+  background-color: var(--color-canvas-inset);
   top: 0;
   right: 0;
   text-align: center;
@@ -120,19 +120,23 @@
 }
 textarea,select,input{
   font-family:"Dumbledor 1",sans-serif;
+  background-color:var(--color-canvas-subtle);
+  border-width: 1px;
+  border-style: solid;
+  border-radius: 4px;
 }
 textarea{
   max-width:100%;
 }
 label{
-  background-color:#242424;
+  background-color:var(--color-canvas-overlay);
   border-radius: 0.5em;
   padding:0.3em;
   display: inline-block;
   vertical-align: top;
 }
-label.block{
-  width:100%;
+label.block textarea{
+  display:block;
 }
 
 /* Page styles */
@@ -156,7 +160,7 @@ ul{
   left:0;
   height:3.2em;
   text-align: center;
-  background-color: black;
+  background-color: var(--color-canvas-inset);
   color:white;
   padding:0.5em;
 }
