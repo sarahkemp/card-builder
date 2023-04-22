@@ -1,0 +1,91 @@
+<!doctype html>
+<html class="no-js" lang="" data-color-mode="dark" data-dark-theme="dark">
+
+<head>
+    <meta charset="utf-8">
+    <title>Card Data Entry</title>
+
+    <link rel="stylesheet" href="vendor/css/primer.css">
+    <link rel="stylesheet" href="vendor/select2/css/select2.css">
+    <link rel="stylesheet" href="vendor/css/select2-dark.css">
+    <link rel="stylesheet" href="vendor/css/directory-structure.css">
+    <link rel="stylesheet" href="vendor/dropzone/dropzone.min.css">
+    <link rel="stylesheet" href="vendor/css/loader.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+
+<body>
+
+<main>
+
+    <div id="controls">
+        <input type="button" class="btn btn-primary" name="Export" value="Export" id="export" />
+        <h2 id="project-name"></h2>
+    </div>
+
+    <div id="card-builder"></div>
+
+    <div id="upload">
+        <h1>CSV Card Builder</h1>
+        <h2>Drop Project Folder Here</h2>
+        <h3>Expected Structure</h3>
+        <ul class="directory-list">
+            <li class="folder">
+                &lt;project_name&gt;
+                <ul>
+                    <li class="folder">
+                        <span class="tooltipped tooltipped-e" aria-label="Saved card data in csv format with a separate file for each card type">csv</span>
+                        <ul>
+                            <li>
+                                <span class="tooltipped tooltipped-e" aria-label="Use the exact spelling and case for the card type used in fields.json">&lt;Card Type&gt;.csv</span>
+                            </li>
+                            <li>...</li>
+                        </ul>
+                    </li>
+                    <li class="folder">
+                        <span class="tooltipped tooltipped-e" aria-label="Card front template images for each card type described in fields.json">fronts</span>
+                        <ul>
+                            <li>
+                                <span class="tooltipped tooltipped-e" aria-label="All lower case, spaces as underscores, match card type spelling from fields.json">&lt;card_type&gt;.png</span>
+                            </li>
+                            <li>...</li>
+                        </ul>
+                    </li>
+                    <li class="folder">
+                        <span class="tooltipped tooltipped-e" aria-label="Folder of images to support any img-selectors">&lt;icon_group_name&gt;</span>
+                        <ul>
+                            <li>
+                                <span class="tooltipped tooltipped-e" aria-label="Icon image for the icon group">&lt;image_name&gt;.png</span>
+                            </li>
+                            <li>...</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong class="tooltipped tooltipped-e" aria-label="Configuration file defining card types and their associated fields">fields.json</strong> (required)
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div id="download"></div>
+
+    <div id="loading-overlay">
+        <div class="lds-ring"><div></div><div></div><div></div><div>
+    </div>
+
+
+</main>
+
+</body>
+
+<footer>
+    <script src="vendor/jquery/jquery-3.6.3.min.js"></script>
+    <script src="vendor/select2/js/select2.full.js"></script>
+    <script src="vendor/dropzone/dropzone.min.js"></script>
+    <script src="vendor/jquery-csv/jquery.csv.min.js"></script>
+    <script src="js/cb-form-builder.js"></script>
+    <script src="js/main.js"></script>
+</footer>
+
+</html>

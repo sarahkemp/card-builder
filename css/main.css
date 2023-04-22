@@ -1,0 +1,171 @@
+#upload, #download{
+  border:3px dashed #999;
+  padding:1em;
+  background-color: #3b3b3b;
+  position: fixed;
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+  border-radius: 2em;
+}
+#upload h1, #upload h2, #upload h3{
+  text-align: center;
+}
+#upload h1{
+  border-bottom:1px solid #999;
+  margin-left:5%;
+  margin-right:5%;
+}
+#upload .directory-list{
+  max-width:300px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #242424;
+  border-radius: 1em;
+  padding:1em;
+}
+#download{
+  display: none;
+}
+#card-preview{
+  width:100%;
+  max-width: 5in;
+  margin:0 auto;
+  height:7in;
+  border:1px solid black;
+  border-radius: 8px;
+  background-color: black;
+}
+#card-preview img{
+  width:100%;
+  height:100%;
+}
+#loading-overlay{
+  display: none;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0.6);
+  text-align: center;
+  padding-top: 20%;
+}
+
+#preview-wrapper{
+  width:50%;
+  padding:0.5em;
+}
+#form-wrapper{
+  float:right;
+  width:50%;
+  padding:0.5em;
+}
+#form-wrapper .fields{
+  margin-top:0.5em;
+  height:calc(7in - 2.6em);
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+#project-name{
+  text-align:center;
+}
+
+#download .closer{
+  border-radius: 0.5em;
+  position: fixed;
+  border: 2px solid gray;
+  background-color: black;
+  top: 0;
+  right: 0;
+  text-align: center;
+  width: 1em;
+  height: 1em;
+  font-size: 300%;
+  line-height: 0.67;
+  cursor: pointer;
+}
+#download .files{
+  overflow-y:auto;
+  height:100%;
+  width:50%;
+  float:left;
+}
+#download .diffs{
+  overflow-y:auto;
+  height:100%;
+  width:50%;
+  float:right;
+}
+
+/* Form styles */
+.img-select2-select img{
+  max-width:50px;
+  max-height:24px;
+}
+.img-select2-result img{
+  max-width:50px;
+  max-height:50px;
+}
+.card-delete{
+  float:right;
+}
+#card-selector{
+  width:100%;
+  position: sticky;
+}
+.field-wrapper{
+  margin: 0.5em 0;
+}
+textarea,select,input{
+  font-family:"Dumbledor 1",sans-serif;
+}
+textarea{
+  max-width:100%;
+}
+label{
+  background-color:#242424;
+  border-radius: 0.5em;
+  padding:0.3em;
+  display: inline-block;
+  vertical-align: top;
+}
+label.block{
+  width:100%;
+}
+
+/* Page styles */
+main{
+  padding-top:3.2em;
+  max-width:1200px;
+}
+ul{
+  margin-left:2em;
+}
+.hidden{
+  display:none !important;
+}
+.tooltipped{
+  text-decoration: dotted underline;
+}
+#controls{
+  position: fixed;
+  top:0;
+  right:0;
+  left:0;
+  height:3.2em;
+  text-align: center;
+  background-color: black;
+  color:white;
+  padding:0.5em;
+}
+#import{
+  float:left;
+}
+#export{
+  float: right;
+}
+.card-controls{
+  text-align: center;
+}
