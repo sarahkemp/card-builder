@@ -1,8 +1,6 @@
 /**
  * Expects json from fields.json with definitions of each card type and
  * its fields
- * todo allow and use font upload
- * todo preview markdown if configured
  * @param fields
  */
 class CBFormBuilder {
@@ -399,6 +397,20 @@ class CBFormBuilder {
         return image.dataURL;
     }
 
+    _markdownToHtml(markdown){
+        // strip out any html tags they've sent
+        markdown = markdown.replaceAll('&', '&amp;')
+            .replaceAll('<', '&lt;')
+            .replaceAll('>', '&gt;')
+            .replaceAll('"', '&quot;')
+            .replaceAll("'", '&#039;');
+
+        // we only support bold and italic because that is all Countersheet for Inkscape supports
+        return markdown
+            .replace(/\/(.*?)\//gim, '<i>$1</i>') // italic text is like /text/
+            .replace(/\*(.*?)\*/gim, '<b>$1</b>'); // bold text is like *text*
+    }
+
     /**
      * multiply the single attribute selector to have 10 of them and add the picture select function
      */
@@ -586,7 +598,7 @@ class CBFormBuilder {
         // if this is a preview field, update the preview
         if($field.data('preview') === 1){
             let $p = this._$preview.find('.field-preview[data-name="'+key+'"]');
-            $p.text(value);
+            $p.html(this._markdownToHtml(value));
         }
 
     }
@@ -710,7 +722,7 @@ class CBFormBuilder {
                         $p.css(k, v);
                     });
                     if(data && data[name]){
-                        $p.text(data[name]);
+                        $p.html(this._markdownToHtml(data[name]));
                     }else{
                         $p.html('&nbsp;');
                     }
