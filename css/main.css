@@ -121,6 +121,9 @@
 .card-delete{
   float:right;
 }
+.card-next{
+  float:right;
+}
 #card-selector{
   width:100%;
   position: sticky;

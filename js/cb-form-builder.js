@@ -1,6 +1,13 @@
 /**
  * Expects json from fields.json with definitions of each card type and
  * its fields
+ * todo show field name in preview as placeholder
+ * todo allow changing front type to change background image
+ * todo show icons in preview when img-selector is used
+ * todo next & previous buttons
+ * todo filter by card type
+ * todo search card text & display in picker
+ * todo support rotated cards / other sizes
  * @param fields
  */
 class CBFormBuilder {
@@ -158,6 +165,16 @@ class CBFormBuilder {
             that._resetActiveCard();
         });
 
+        this._$container.on('click', '.card-next', function(e){
+            e.preventDefault();
+            that._$selector.val(that._getNextCard()).trigger('change');
+        });
+
+        this._$container.on('click', '.card-previous', function(e){
+            e.preventDefault();
+            that._$selector.val(that._getNextCard(true)).trigger('change');
+        });
+
     }
 
     _build(fields){
@@ -187,11 +204,17 @@ class CBFormBuilder {
         $wrapper.prepend(that._buildTypeSelector(types));
         $wrapper.append($fields);
 
-        let $reset = $('<button class="card-reset btn btn-danger" type="button">Reset Card</button>');
+        let $reset = $('<button class="card-reset btn btn-danger controls" type="button">Reset Card</button>');
         $fields.append($reset);
 
-        let $delete = $('<button class="card-delete btn btn-danger" type="button">Delete Card</button>');
+        let $delete = $('<button class="card-delete btn btn-danger controls" type="button">Delete Card</button>');
         $fields.append($delete);
+
+        let $next = $('<button class="card-next btn controls" type="button">Next</button>');
+        $fields.prepend($next);
+
+        let $previous = $('<button class="card-previous btn controls" type="button">Previous</button>');
+        $fields.prepend($previous);
 
         that._$container.prepend($wrapper);
     }
@@ -411,6 +434,22 @@ class CBFormBuilder {
         }
         let image = this._images[parent][name];
         return image.dataURL;
+    }
+
+    _getNextCard(reverse = false){
+        let $active = $(this._$selector.find('option:selected'));
+        let dir = reverse ? 'prev' : 'next';
+
+        // if nothing is selected, just select the blank
+        if(!$active){
+            return '';
+        }
+        let $next = $active[dir]();
+        if($next.length){
+            return $next.val()
+        }
+        // return to the first child of the parent
+        return $active.parent().children().first().val();
     }
 
     _markdownToHtml(markdown){
@@ -789,8 +828,7 @@ class CBFormBuilder {
                 }
             }
             if(type !== rowIndex){
-                $wrapper.children('.card-reset').show();
-                $wrapper.children('.card-delete').show();
+                $wrapper.children('.controls').show();
             }
         }
     }
