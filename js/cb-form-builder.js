@@ -246,7 +246,7 @@ class CBFormBuilder {
         if(defs.tag) {
             let $wrapper = $('<div id="cb-field-' + defs.cbidx + '" class="field-wrapper"/>');
             let $label = $('<label>');
-            $label.text(defs.name + " ");
+            $label.text((defs.label || defs.name) + " ");
             $label.append(this._buildTag(defs, $label));
             $wrapper.append($label);
 
