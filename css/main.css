@@ -110,6 +110,21 @@
 }
 
 /* Form styles */
+.card-select2 .select2-results > .select2-results__options {
+  max-height: 5.5in;
+}
+.card-select2 .select2-results__group {
+  position: sticky;
+  top: 0;
+  background: var(--color-canvas-default);
+  box-shadow: var(--color-shadow-medium);
+}
+.card-select2 .select2-results__option span {
+  display:block;
+  text-overflow: ellipsis;
+  overflow-x:hidden;
+  white-space: nowrap;
+}
 .img-select2-select img{
   max-width:50px;
   max-height:24px;

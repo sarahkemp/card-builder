@@ -4,9 +4,7 @@
  * todo show field name in preview as placeholder
  * todo allow changing front type to change background image
  * todo show icons in preview when img-selector is used
- * todo next & previous buttons
  * todo filter by card type
- * todo search card text & display in picker
  * todo support rotated cards / other sizes
  * @param fields
  */
@@ -404,7 +402,7 @@ class CBFormBuilder {
         if(!value){
             return value;
         }
-        return value.replace(type+'|', '');
+        return this._selectorValueToIndex(value, type);
     }
 
     _getActiveCardName(){
@@ -466,6 +464,25 @@ class CBFormBuilder {
             .replace(/\*(.*?)\*/gim, '<b>$1</b>'); // bold text is like *text*
     }
 
+    _formatResult(state){
+        if (!state.id) {
+            return state.text;
+        }
+        let $html = $('<strong></strong>');
+        $html.text(state.text);
+        $html = $html.wrap('<div></div>').parent();
+        if(state.matched){
+            let $span = $('<span/>');
+            $span.text(state.matched);
+            $html.append($span);
+        }else if(state.element.dataset.desc){
+            let $span = $('<span/>');
+            $span.text(state.element.dataset.desc);
+            $html.append($span);
+        }
+        return $html;
+    }
+
     /**
      * multiply the single attribute selector to have 10 of them and add the picture select function
      */
@@ -504,7 +521,9 @@ class CBFormBuilder {
                 let $group = $('<optgroup label="'+type+'"/>');
                 for(let i = 0; i < rows.length; i++){
                     if(rows[i]){
-                        $group.append($('<option value="'+that._getCardName(type,i)+'">'+rows[i].NAME+'</option>'));
+                        let $op = $('<option value="'+that._getCardName(type,i)+'">'+rows[i].NAME+'</option>');
+                        $op.attr('data-desc', rows[i].EFFECT);
+                        $group.append($op);
                     }
                 }
                 $input.append($group);
@@ -515,8 +534,10 @@ class CBFormBuilder {
         $input.select2({
             containerCssClass: 'card-select2',
             dropdownCssClass: 'card-select2',
-            dropdownAutoWidth: true,
+            // dropdownAutoWidth: true,
             dropdownParent: $input.parent(),
+            templateResult: that._formatResult,
+            matcher: that._matchNameOrDesc.bind(that)
         }).on('change', function(){
             that._loadCard();
         });
@@ -584,6 +605,64 @@ class CBFormBuilder {
         this._updateCardPreview(type);
     }
 
+    _matchNameOrDesc(params, data) {
+        // Always return the object if there is nothing to compare
+        if ($.trim(params.term) === '') {
+            return data;
+        }
+
+        // Do a recursive check for options with children
+        if (data.children && data.children.length > 0) {
+            // Clone the data object if there are children
+            // This is required as we modify the object to remove any non-matches
+            var match = $.extend(true, {}, data);
+
+            // Check each child of the option
+            for (var c = data.children.length - 1; c >= 0; c--) {
+                var child = data.children[c];
+
+                var matches = this._matchNameOrDesc(params, child);
+
+                // If there wasn't a match, remove the object in the array
+                if (matches == null) {
+                    match.children.splice(c, 1);
+                }
+            }
+
+            // If any children matched, return the new object
+            if (match.children.length > 0) {
+                return match;
+            }
+
+            // If there were no matching children, check just the plain object
+            return this._matchNameOrDesc(params, match);
+        }
+
+        let original = data.text.toUpperCase();
+        let term = params.term.toUpperCase();
+
+        // Check if the text contains the term
+        if (original.indexOf(term) > -1) {
+            return data;
+        }
+
+        original = data.element.dataset.desc;
+        if(!original){
+            return null;
+        }
+        original = original.toUpperCase();
+        if (original) {
+            let idx = original.indexOf(term);
+            if(idx > -1){
+                data.matched = (idx > 20 ? '...' : '')+data.element.dataset.desc.substring(idx - 20).trimStart();
+                return data;
+            }
+        }
+
+        // If it doesn't contain the term, don't return anything
+        return null;
+    }
+
     _rebuildSelector(select, focus = false){
         if(this._$selector.data('select2')){
             this._$selector.select2('destroy');
@@ -638,6 +717,10 @@ class CBFormBuilder {
         // save the new information
         this._setDataValue(type, active, key, value, $field.data('preview') === 1);
 
+    }
+
+    _selectorValueToIndex(value, type){
+        return value.replace(type+'|', '');
     }
 
     _setDataValue(type, idx, key, value, updatePreview = false){
