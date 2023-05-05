@@ -870,7 +870,7 @@ class CBFormBuilder {
                     let name = fields[i].name.toUpperCase();
                     let $p = $('<div class="field-preview" data-name="'+name+'" />');
                     $.each(fields[i].preview, function(k, v){
-                        $p.css(k, v);
+                        $p.css(k, (k === 'font-family') ? '"'+v+'"' : v);
                     });
                     if(data && data[name]){
                         $p.html(this._markdownToHtml(data[name]));
