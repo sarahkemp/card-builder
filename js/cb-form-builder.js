@@ -120,7 +120,7 @@ class CBFormBuilder {
         }
 
         this._data[type].push(initial);
-        let $optgroup = this._$selector.find('optgroup[label="'+type+'"]');
+        let $optgroup = this._$selector.find('optgroup[data-type="'+type+'"]');
         let idx = this._data[type].length - 1;
         let name = this._getCardName(type, idx);
         let $op = $('<option value="'+name+'">New</option>');
@@ -520,7 +520,7 @@ class CBFormBuilder {
             $.each(this._data, function(type, rows){
                 let $group = $('<optgroup label=""/>');
                 let groupCount = 0;
-                $group.data('type', type);
+                $group.attr('data-type', type);
                 for(let i = 0; i < rows.length; i++){
                     if(rows[i]){
                         let $op = $('<option value="'+that._getCardName(type,i)+'"/>');
@@ -545,7 +545,7 @@ class CBFormBuilder {
             dropdownParent: $input.parent(),
             templateResult: that._formatResult,
             matcher: that._matchNameOrDesc.bind(that)
-        }).on('change', function(){
+        }).off('change').on('change', function(){
             that._loadCard();
         });
 
