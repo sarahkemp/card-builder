@@ -416,7 +416,7 @@ class CBFormBuilder {
             return false;
         }
         // new cards have no optgoup parent label, and their type is their value
-        return parent.attr('label') || this._$selector.val();
+        return parent.data('type') || this._$selector.val();
     }
 
     _getCardName(type, idx){
@@ -518,14 +518,21 @@ class CBFormBuilder {
         // load any cards they've already saved
         if(this._data){
             $.each(this._data, function(type, rows){
-                let $group = $('<optgroup label="'+type+'"/>');
+                let $group = $('<optgroup label=""/>');
+                let groupCount = 0;
+                $group.data('type', type);
                 for(let i = 0; i < rows.length; i++){
                     if(rows[i]){
-                        let $op = $('<option value="'+that._getCardName(type,i)+'">'+rows[i].NAME+'</option>');
+                        let $op = $('<option value="'+that._getCardName(type,i)+'"/>');
+                        $op.text(rows[i].NAME+(rows[i].COUNT > 1 ? ' ('+rows[i].COUNT+')' : ''));
                         $op.attr('data-desc', rows[i].EFFECT);
+                        $op.attr('data-name', rows[i].NAME);
+                        let ct = parseInt(rows[i].COUNT);
+                        groupCount += isNaN(ct) ? 1 : ct;
                         $group.append($op);
                     }
                 }
+                $group.attr('label', type+' ('+groupCount+')');
                 $input.append($group);
             });
         }
