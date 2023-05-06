@@ -1,7 +1,6 @@
 /**
  * Expects json from fields.json with definitions of each card type and
  * its fields
- * todo show field name in preview as placeholder
  * todo allow changing front type to change background image
  * todo show icons in preview when img-selector is used
  * @param fields
@@ -930,8 +929,9 @@ class CBFormBuilder {
                     if(data && data[name]){
                         $p.html(this._markdownToHtml(data[name]));
                     }else{
-                        $p.html('&nbsp;');
+                        $p.html('<em class="placeholder">'+fields[i].name+'</em>');
                     }
+                    $p.addClass('tooltipped tooltipped-s').attr('aria-label', name);
                     $wrapper.append($p);
                 }
                 this._$preview.append($wrapper);

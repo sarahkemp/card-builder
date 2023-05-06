@@ -28,26 +28,6 @@
 #download{
   display: none;
 }
-#card-preview{
-  max-width:100%;
-  max-height:100%;
-  margin:0 auto;
-  height:7in;
-  width:5in;
-  border:1px solid var(--color-canvas-inset);
-  border-radius: 8px;
-  background-color: var(--color-canvas-inset);
-  position: relative;
-}
-#preview-wrapper .field-preview{
-  border: 1px dotted var(--color-border-muted);
-  background-color: rgba(255,255,255,0.5);
-  color: var(--color-scale-black);
-  border-radius: 8px;
-  padding: 0.5em;
-  position: absolute;
-  white-space: pre-wrap;
-}
 #loading-overlay{
   display: none;
   position: fixed;
@@ -58,32 +38,6 @@
   background-color: var(--color-neutral-subtle);
   text-align: center;
   padding-top: 20%;
-}
-
-#preview-wrapper{
-  position: fixed;
-  top:3.2em;
-  left:0;
-  bottom:0;
-  width:50%;
-  padding:0.5em;
-  overflow:auto;
-  text-align: center;
-}
-#form-wrapper{
-  position: fixed;
-  top:3.2em;
-  right:0;
-  bottom:0;
-  width:50%;
-  height: 100%;
-  padding:0.5em;
-  overflow:hidden;
-}
-#form-wrapper .fields{
-  margin-top:0.5em;
-  overflow-y:auto;
-  max-height: 100%;
 }
 #project-name{
   text-align:center;
@@ -116,7 +70,60 @@
   float:right;
 }
 
+/* Preview styles */
+#preview-wrapper{
+  position: fixed;
+  top:3.2em;
+  left:0;
+  bottom:0;
+  width:50%;
+  padding:0.5em;
+  overflow:auto;
+  text-align: center;
+}
+#card-preview{
+  max-width:100%;
+  max-height:100%;
+  margin:0 auto;
+  height:7in;
+  width:5in;
+  border:1px solid var(--color-canvas-inset);
+  border-radius: 8px;
+  background-color: var(--color-canvas-inset);
+  position: relative;
+}
+#preview-wrapper .field-preview{
+  border: 1px dotted var(--color-border-muted);
+  background-color: rgba(255,255,255,0.5);
+  color: var(--color-scale-black);
+  border-radius: 8px;
+  padding: 0.5em;
+  position: absolute;
+  white-space: pre-wrap;
+}
+#preview-wrapper .field-preview .placeholder{
+  color:var(--color-neutral-muted);
+}
+#preview-wrapper .field-preview.tooltipped{
+  text-decoration: none;
+}
+
 /* Form styles */
+#form-wrapper{
+  position: fixed;
+  top:3.2em;
+  right:0;
+  bottom:0;
+  width:50%;
+  height: 100%;
+  padding:0.5em;
+  overflow:hidden;
+}
+#form-wrapper .fields{
+  margin-top:0.5em;
+  overflow-y:auto;
+  max-height: 100%;
+}
 #form-wrapper > .select2-container--open:not(.select2){
   height:80%;
 }
