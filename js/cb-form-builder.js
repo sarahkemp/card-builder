@@ -837,7 +837,7 @@ class CBFormBuilder {
         let $list = $('<ul/>');
         $.each(this._data, function(type, rows){
             let $li = $('<li/>');
-            let $a = $(that._downloadLink($.csv.fromObjects(rows.filter(function(val){return val})), type));
+            let $a = $(that._downloadLink($.csv.fromObjects(rows.filter(function(val){return val}), {manualOrder: ['COUNT']}), type));
             $li.append($a);
             $list.append($li);
         });
