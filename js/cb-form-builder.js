@@ -6,6 +6,7 @@
  * todo show icons in preview when img-selector is used
  * todo filter by card type
  * todo support rotated cards / other sizes
+ * todo dont open search on ctrl + key outside of a field
  * @param fields
  */
 class CBFormBuilder {
@@ -608,8 +609,8 @@ class CBFormBuilder {
     _loadCard(){
         let type = this._getActiveCardType();
 
-        this._updateFieldsForCardType(type, this._getActiveCardIndex());
         this._updateCardPreview(type);
+        this._updateFieldsForCardType(type, this._getActiveCardIndex());
     }
 
     _matchNameOrDesc(params, data) {
@@ -852,18 +853,39 @@ class CBFormBuilder {
      * @param type
      */
     _updateCardPreview(type){
+        let that = this;
         this._$preview.empty();
+        that._$preview.css('width', '100%');
+        that._$preview.css('height', '100%');
 
         if(!type){
             return false;
         }
 
+        let $wrapper = $('<div/>');
         // show the card front template if found
         let imagePath = type.toLowerCase().replace(' ', '_')+'.png';
+        let scale = 1;
         if(this._images['fronts']){
             let imageData = this._images['fronts'][imagePath];
             if(imageData){
-                this._$preview.append($('<img src="'+imageData.dataURL+'" alt="'+type+'" />'));
+                // let $img = $('<img alt="'+type+'" />');
+                let img = new Image();
+                this._$preview.append(img);
+                img.onload = function(){
+                    let $img = $(img);
+                    let xScale = img.width / that._$preview.outerWidth();
+                    let yScale = img.height / that._$preview.outerHeight();
+                    $img.css('width', xScale >= yScale ? '100%' : 'auto');
+                    $img.css('height', yScale >= xScale ? '100%' : 'auto');
+                    that._$preview.css('width', img.clientWidth);
+                    that._$preview.css('height', img.clientHeight);
+                    xScale = img.naturalWidth / img.clientWidth;
+                    yScale = img.naturalHeight / img.clientHeight;
+                    scale = 1 / Math.max(xScale, yScale);
+                    $wrapper.css('zoom', scale);
+                };
+                img.src = imageData.dataURL;
             }
         }
 
@@ -884,8 +906,9 @@ class CBFormBuilder {
                     }else{
                         $p.html('&nbsp;');
                     }
-                    this._$preview.append($p);
+                    $wrapper.append($p);
                 }
+                this._$preview.append($wrapper);
             }
         }
     }
