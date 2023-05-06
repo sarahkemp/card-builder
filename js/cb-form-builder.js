@@ -5,8 +5,6 @@
  * todo allow changing front type to change background image
  * todo show icons in preview when img-selector is used
  * todo filter by card type
- * todo support rotated cards / other sizes
- * todo dont open search on ctrl + key outside of a field
  * @param fields
  */
 class CBFormBuilder {
@@ -319,6 +317,9 @@ class CBFormBuilder {
 
         document.addEventListener('keydown', function(e){
             let active = document.activeElement;
+            if(e.ctrlKey){
+                return true;
+            }
             if(e.key === 'Escape'){
                 (active || that._$selector).blur();
                 return true;
