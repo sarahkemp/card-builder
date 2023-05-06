@@ -438,6 +438,7 @@ class CBFormBuilder {
     _getNextCard(reverse = false){
         let $active = $(this._$selector.find('option:selected'));
         let dir = reverse ? 'prev' : 'next';
+        let loop = reverse ? 'last' : 'first';
 
         // if nothing is selected, just select the blank
         if(!$active){
@@ -447,8 +448,8 @@ class CBFormBuilder {
         if($next.length){
             return $next.val()
         }
-        // return to the first child of the parent
-        return $active.parent().children().first().val();
+        // loop to start/end
+        return $active.parent().children()[loop]().val();
     }
 
     _markdownToHtml(markdown){
