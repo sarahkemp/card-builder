@@ -318,6 +318,11 @@ class CBFormBuilder {
         document.addEventListener('keydown', function(e){
             let active = document.activeElement;
             if(e.ctrlKey){
+                if(e.key === 'ArrowRight' || e.key === 'ArrowDown'){
+                    that._$selector.val(that._getNextCard()).trigger('change');
+                }else if(e.key === 'ArrowLeft' || e.key === 'ArrowUp'){
+                    that._$selector.val(that._getNextCard(true)).trigger('change');
+                }
                 return true;
             }
             if(e.key === 'Escape'){
