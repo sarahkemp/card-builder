@@ -4,7 +4,6 @@
  * todo show field name in preview as placeholder
  * todo allow changing front type to change background image
  * todo show icons in preview when img-selector is used
- * todo filter by card type
  * @param fields
  */
 class CBFormBuilder {
@@ -626,17 +625,40 @@ class CBFormBuilder {
             return data;
         }
 
+        let original = data.text.toUpperCase();
+        let term = params.term.toUpperCase();
+        let type = null;
+
+        if(term.length >= 5 && term.substring(0, 5) === 'TYPE:'){
+            // only the contents of groups should be evaluated if they set a type limiter
+            if(data.element.tagName !== 'OPTGROUP'){
+                return null;
+            }
+            type = term.substring(5);
+            let end = type.indexOf(' ');
+            if(end !== -1){
+                type = type.substring(0, end);
+            }
+            term = $.trim(term.replace('TYPE:'+type, ''));
+            params = structuredClone(params);
+            params.term = term;
+        }
+
         // Do a recursive check for options with children
         if (data.children && data.children.length > 0) {
+            // don't find matches in optgroups of other types if they set a type
+            if(type !== null && data.element.dataset.type.toUpperCase().indexOf(type) === -1){
+                return null;
+            }
             // Clone the data object if there are children
             // This is required as we modify the object to remove any non-matches
-            var match = $.extend(true, {}, data);
+            let match = $.extend(true, {}, data);
 
             // Check each child of the option
-            for (var c = data.children.length - 1; c >= 0; c--) {
-                var child = data.children[c];
+            for (let c = data.children.length - 1; c >= 0; c--) {
+                let child = data.children[c];
 
-                var matches = this._matchNameOrDesc(params, child);
+                let matches = this._matchNameOrDesc(params, child);
 
                 // If there wasn't a match, remove the object in the array
                 if (matches == null) {
@@ -652,9 +674,6 @@ class CBFormBuilder {
             // If there were no matching children, check just the plain object
             return this._matchNameOrDesc(params, match);
         }
-
-        let original = data.text.toUpperCase();
-        let term = params.term.toUpperCase();
 
         // Check if the text contains the term
         if (original.indexOf(term) > -1) {
