@@ -315,6 +315,9 @@ class CBFormBuilder {
             }
         });
 
+        this._$selector.on('change', function(){
+            that._loadCard();
+        });
         document.addEventListener('keydown', function(e){
             let active = document.activeElement;
             if(e.ctrlKey){
@@ -549,12 +552,9 @@ class CBFormBuilder {
         $input.select2({
             containerCssClass: 'card-select2',
             dropdownCssClass: 'card-select2',
-            // dropdownAutoWidth: true,
             dropdownParent: $input.parent(),
             templateResult: that._formatResult,
             matcher: that._matchNameOrDesc.bind(that)
-        }).off('change').on('change', function(){
-            that._loadCard();
         });
 
         // hide the original select to move focus
